@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+echo "Статус системы:"
+echo "-------------------"
+
+
+echo "Время работы: $(uptime -p)"
+
+
+echo "Использование диска:"
+df -h / | awk 'NR==2 {print $5 " использовано (" $3 "/" $2 ")"}'
+
+echo "Использование памяти:"
+free -h | awk 'NR==2 {print $3 "/" $2 " использовано (" $3/$2 * 100.0 "%)"}'
+
+
+echo "Топ-5 процессов по CPU:"
+ps aux --sort=-%cpu | head -6
+
+
+if [ -f /sys/class/thermal/thermal_zone0/temp ]; then
+    TEMP=$(cat /sys/class/thermal/thermal_zone0/temp)
+    echo " Температура CPU: $((TEMP/1000))°C"
+fi
+
